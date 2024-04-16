@@ -1,0 +1,17 @@
+pokrece novi kontroler
+kubctl create - f replicaset-definition.yml
+
+daje listu kontrolera
+kubectl get replicationcontroller
+
+brise kontroler
+kubectl delete replicaset myapp-controller
+
+
+moze da se promeni broj replika u replicaset fajlu 
+i da se pokrene komanda
+kubectl replace - f replicaset-definition.yml
+ili 
+kubectl scale --replicas=6 - f replicaset-definition.yml
+ili 
+kubectl scale --replicas=6 - f replicaset myapp-replicaset
