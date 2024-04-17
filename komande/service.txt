@@ -24,19 +24,6 @@ kubectl describe node mynode
 pokaze listu nodova 
 kubectl get pods -o wide
 
-daje listu kontrolera
-kubectl get replicationcontroller
-
-moze da se promeni broj replika u replicaset fajlu 
-i da se pokrene komanda
-kubectl replace - f replicaset-definition.yml
-ili 
-kubectl scale --replicas=6 - f replicaset-definition.yml
-ili 
-kubectl scale --replicas=6 - f replicaset myapp-replicaset
-
-
-
 
 
 It may take a moment, but your deployment will soon show up when you run:
