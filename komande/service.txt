@@ -40,3 +40,9 @@ Tada! Your application is now available at http://localhost:7080/.
 You should be able to see the request metadata in the application output. 
 Try changing the path of the request and observe the changes. 
 Similarly, you can do a POST request and observe the body show up in the output.
+
+
+kubectl get pod
+kubectl get replicaset
+kubectl get deployment
+kubectl get services

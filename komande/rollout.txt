@@ -1,2 +1,26 @@
+Postoje 2 vrste rolloute 
+1. Recreate - brise sve podove i pravi nove
+2. Rolling Update (default ) - brise 1 i pravi jedan novi i tako dok sve ne zameni sa novim 
+
+Record reason of
+kubectl create -f rollout.yaml --recorde                    
+
 kubectl rollout status deployment/mydeployment
-kubectl rollout history deployment
+kubectl rollout history deployment myapp-deployment
+
+kubectl apply -f deployment-test.yaml
+kubectl set image mydeployment nginx-container=nginx:1.9.1
+
+menja deployment
+kubectl edit deployment myapp-deployment -record  
+otvori vim fajl u kom je moguce promeniti podesavanja
+
+kubectl set image deployment myapp-deployment container-name=nginx:1.18-perl --record
+
+posle promene treba ga pokrenuti
+kubectl rollout status deployment myapp-deployment
+
+pregled verzija
+kubectl rollout history deployment myapp-deployment
+
+kubectl rollout undo deployment myapp-deployment
