@@ -24,19 +24,6 @@ kubectl describe node mynode
 pokaze listu nodova 
 kubectl get pods -o wide
 
-daje listu kontrolera
-kubectl get replicationcontroller
-
-moze da se promeni broj replika u replicaset fajlu 
-i da se pokrene komanda
-kubectl replace - f replicaset-definition.yml
-ili 
-kubectl scale --replicas=6 - f replicaset-definition.yml
-ili 
-kubectl scale --replicas=6 - f replicaset myapp-replicaset
-
-
-
 
 
 It may take a moment, but your deployment will soon show up when you run:
@@ -53,3 +40,10 @@ Tada! Your application is now available at http://localhost:7080/.
 You should be able to see the request metadata in the application output. 
 Try changing the path of the request and observe the changes. 
 Similarly, you can do a POST request and observe the body show up in the output.
+
+
+kubectl get pod
+kubectl get replicaset
+kubectl get deployment
+kubectl get services
+

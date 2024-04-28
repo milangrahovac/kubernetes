@@ -2,6 +2,7 @@ minikube delete
 minikube start
 minikube --driver doker
 
+kubectl get all
 
 kubctl get nodes
 kubctl get po -A

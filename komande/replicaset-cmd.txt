@@ -14,4 +14,16 @@ kubectl replace - f replicaset-definition.yml
 ili 
 kubectl scale --replicas=6 - f replicaset-definition.yml
 ili 
-kubectl scale --replicas=6 - f replicaset myapp-replicaset
+kubectl scale replicaset myapp-replicaset --replicas=2
+
+Edit fajla
+kubectl edit replicaset myapp-replicaset
+
+kubectl scale replicaset new-replica-set --replicas=2
+
+
+Deployment
+kubectl create deployment --help
+
+komanda koja kreira deployment
+kubectl create deployment depname --image=someimage -replicas=3
