@@ -34,6 +34,9 @@ kubectl run nginx --image nginx
 kubectl get pods
 kubectl get pods -o wide
 kubectl get pods --selector app=app1
+kubectl get pod webapp -o yaml > my-new-pod.yaml
+
+
 
 kubectl create -f pod-definition.yml
 kubectl delete -f pod-definition.yml
@@ -135,6 +138,15 @@ Telerations:
 			effect: NoSchedule
 
 
+kubectl describe node kubemaster | grep Taint
+
+
+kubectl label nodes node-name label-key=label-value
+kubectl label nodes node01 size=Large 
+kubectl label nodes node01 color=blue
+
+
+
 1. kubectl run nginx-pod --image=nginx:alpine  
 
 2. kubectl run redis --image=redis:alpine --label="tier=db, env=prod"
@@ -163,3 +175,16 @@ labels and selectors
 
 1. kubectl get pods --selector env=dev | wc -l
 1. kubectl get pods --selector env=dev --no-headers | wc -l
+
+
+taints
+2. kubectl describe node node01 | grep Taint
+3. kubectl taint nodes node01 spray=mortein:NoSchedule
+4. kubectl run mosquito --image=nginx
+7. kubectl run bee --image=nginx
+8. kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+
+
+kubectl create deployment red --image=nginx --replicas=3 --dry-run=client -o yaml > blue.yaml
+
+kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3 --dry-run=client -o yam
