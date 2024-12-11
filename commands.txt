@@ -145,7 +145,8 @@ kubectl label nodes node-name label-key=label-value
 kubectl label nodes node01 size=Large 
 kubectl label nodes node01 color=blue
 
-
+kubectl get daemonsets --all-namespaces
+kubectl describe daemonset kube-proxy -n kube-system
 
 1. kubectl run nginx-pod --image=nginx:alpine  
 
@@ -188,3 +189,44 @@ taints
 kubectl create deployment red --image=nginx --replicas=3 --dry-run=client -o yaml > blue.yaml
 
 kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3 --dry-run=client -o yam
+
+
+
+kubectl create deamonset elasticsearch --image=registry.k8s.io/fluentd-elasticsearch:1.2 -n=kube-system --dry-run=client -o yaml > blue.yaml
+kubectl run static-busybox --image=busybox --dry-run -0 yaml > static-busybox.yaml
+kubectl run static-busybox --image=busybox --dry-run=client -o yaml
+kubectl set image deployments/frontend simple-webapp=kodekloud/webapp-color:v2
+kubectl create deployment --image=kodekloud/webapp-color:v2 frontend --dry-run=client -o yaml > nginx-deployment.yaml
+kubectl create configmap 
+kubectl create configmap app-config --from-literal=APP_COLOR=blue
+kubectl create configmap webapp-config-map --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard --dry-run=client -o yaml > webapp-config-map.yaml
+kubectl create secrets generic app-secret --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard --dry-run=client -o yaml > webapp-config-map.yaml
+
+kubectl create secrets generic app-secret --from-file=app_secret.properties
+echo -n 'mysql' | base64
+echo -n 'bXlzcWw=' | base64 --decode
+
+kubectl get secret app-secret -o yaml
+
+kubectl run webapp --image=busybox -- --color green
+
+Summarize Commands
+> kubectl rollout status deployment/myapp-deployment
+> kubectl rollout history deployment/myapp-deployment
+> kubectl create –f deployment-definition.yml
+> kubectl get deployments
+> kubectl apply –f deployment-definition.yml
+> kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+> kubectl rollout undo deployment/myapp-deployment
+
+kubectl create secrets generic db-secret --from-literal=DB_Host=sql01 \
+										 --from-literal=DB_User=root \
+										 --from-literal=DB_Password=password123 \
+										 --dry-run=client -o yaml > webapp-scr.yaml
+
+
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123 --dry-run=client -o yaml
+kubectl create secret generic my-secret --from-literal=key1=supersecret --from-literal=key2=topsecret
+
+
+critcl pods
