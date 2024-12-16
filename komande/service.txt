@@ -46,4 +46,3 @@ kubectl get pod
 kubectl get replicaset
 kubectl get deployment
 kubectl get services
-
