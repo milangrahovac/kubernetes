@@ -1,0 +1,27 @@
+1. How many static pods exist in this cluster in all namespaces?
+kubectl get pods -A
+has node name in name -node1
+kubectl get pod kube-apiserver-controlplane -n kube-system -o yaml
+
+
+cat cat/lib/kubelet/config.yaml 
+open to check staticPodPath: /etc/kubernetes/manifests
+
+kubectl run static-busybox --image=busybox -restart=Never --dry-run=client -o yaml --command -- sleep 1000 > busybox.yaml
+
+
+ssh mode1
+proveri da li je falj u 
+ls /etc/kubernetes/manifests/
+
+ako nije proveri gde se snimaju manifesti
+cat /var/lib/kubelet/config.yaml
+pogledaj 
+staticPodPath: /etc/just-to-mess-with-you
+
+kubectl describe pod kube-scheduler-controlplane
+kubectl get serviceaccount -n kube-system and kubectl get clusterrolebinding
+
+kubectl create configmap my-scheduler-config --from-file=/root/my-scheduler-config.yaml -n kube-system
+kubectl get configmap my-scheduler-config 0n kube-system
+kubectl describe pod kube-scheduler-controlplane -n kube-system | grep image

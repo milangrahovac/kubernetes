@@ -1,0 +1,300 @@
+minikube start/stop
+minikube dashboard
+
+~  kubectl get pods -n kube-system
+NAME                               READY   STATUS    RESTARTS         AGE
+coredns-5dd5756b68-9pmh6           1/1     Running   13 (194d ago)    221d
+etcd-minikube                      1/1     Running   12 (194d ago)    221d
+kube-apiserver-minikube            1/1     Running   12 (14m ago)     221d
+kube-controller-manager-minikube   1/1     Running   12 (194d ago)    221d
+kube-proxy-rn97l                   1/1     Running   12 (194d ago)    221d
+kube-scheduler-minikube            1/1     Running   12 (194d ago)    221d
+storage-provisioner                1/1     Running   28 (2m44s ago)   221d
+
+For example ETCDCTL version 2 supports the following commands:
+		etcdctl backup
+		etcdctl cluster-health
+		etcdctl mk
+		etcdctl mkdir
+		etcdctl set
+
+Whereas the commands are different in version 3
+		etcdctl snapshot save
+		etcdctl endpoint health
+		etcdctl get
+		etcdctl put
+
+Certificates:
+		--cacert /etc/kubernetes/pki/etcd/ca.crt
+		--cert /etc/kubernetes/pki/etcd/server.crt
+		--key /etc/kubernetes/pki/etcd/server.key
+
+
+kubectl run nginx --image nginx
+kubectl get pods
+kubectl get pods -o wide
+kubectl get pods --selector app=app1
+kubectl get pod webapp -o yaml > my-new-pod.yaml
+
+
+
+kubectl create -f pod-definition.yml
+kubectl delete -f pod-definition.yml
+kubectl describe pod myapp-pod
+
+kubectl run redis --image=redis --dry-run -0 yaml
+kubectl run redis --image=redis --dry-run -0 yaml > redis.yaml
+
+kubectl edit pod <pod-name>
+kubectl replace -f replicaset-definition.yml
+kubectl replace --force -f replicaset-definition.yml
+
+
+kubectl get replicationcontroller
+kubectl scale replicaset <replicaset-name> --replicas=<new-count>
+kubectl slale --replicas=6 -f replicaset-definition.yml
+kubectl slale --replicas=6 -f replicaset myapp-replicaset
+
+kubectl create -f replicaset-definition.yml
+kubectl get replicaset
+kubectl delete  -f replicaset-definition.yml
+kubectl delete  replicaset myapp-replicaset
+
+kubectl replace -f replicaset-definition.yml
+
+
+kubectl logs pod-name
+
+get interactive terminal
+kubectl exec-it podname --bin/bash
+
+Create an NGINX Pod
+kubectl run nginx --image=nginx
+
+Generate POD Manifest YAML file (-o yaml). Don't create it(--dry-run)
+kubectl run nginx --image=nginx --dry-run=client -o yaml
+
+Create a deployment
+kubectl create deployment --image=nginx nginx
+
+Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+
+Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run) and save it to a file.
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml
+
+Make necessary changes to the file (for example, adding more replicas) and then create the deployment.
+kubectl create -f nginx-deployment.yaml
+
+c
+
+OR
+
+In k8s version 1.19+, we can specify the --replicas option to create a deployment with 4 replicas.
+kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml
+
+
+kubectl create deployment --image=httpd:2.4-alpine httpd-frontend --replicas=3 --dry-run=client -o yaml > deployment-definition-2.yaml
+
+
+
+kubectl get pods -n kube-system
+kubectl get endpoints <service name>   
+kubectl get pods --namespace=kube-system
+kubectl create -f pode-definition.yml --namespace=dev
+
+kubectl create namespace dev
+kubectl config set-context $(kubectl config current-context) --namespace=dev
+kubectl get pods --all-namespaces
+
+
+kubectl run redis --image=redis:alpine --dry-run=client -o yaml > redis-pod.yaml
+kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
+
+kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3 --dry-run=client -o yam
+
+kubectl run custom-nginx --image=nginx --dry-run=client
+kubectl expose pod custom-nginx --port=8080 --name nginx-service --dry-run=client -o yaml
+kubectl run custom-nginx --image=nginx --port=8080
+kubectl create namespace dev-ns
+
+
+kubectl create deployment redis-deploy --image=redis --replicas=2 -n=dev-ns --dry-run=client -o yaml
+
+
+kubectl run httpd --image=httpd:alpine --port=8080
+kubectl expose pod httpd --port=80 --name httpd --dry-run=client -o yaml
+
+Taint:
+kubect taint nodes node-name key=value:taint-effect
+kubectl taint nodes node1 app=blue:NoSchedule
+
+Telerations:
+	spec:
+		tolerations:
+			- key: app
+			operator: "Equal"
+			value: blue
+			effect: NoSchedule
+
+
+kubectl describe node kubemaster | grep Taint
+
+
+kubectl label nodes node-name label-key=label-value
+kubectl label nodes node01 size=Large 
+kubectl label nodes node01 color=blue
+
+kubectl get daemonsets --all-namespaces
+kubectl describe daemonset kube-proxy -n kube-system
+
+1. kubectl run nginx-pod --image=nginx:alpine  
+
+2. kubectl run redis --image=redis:alpine --label="tier=db, env=prod"
+
+3. kubectl expose pod redis --port=6379 --name redis-service  
+
+4. kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3
+
+5. kubectl run custom-nginx --image=nginx --port=8080
+
+6. kubectl create namespace dev-ns
+
+7. kubectl create deployment redis-deploy --image=redis --replicas=2 -n=dev-ns
+
+8. kubectl run httpd --image=httpd:alpine --port=80 --expose=true
+
+
+labels and selectors
+
+1. kubectl get pods --selector env=dev
+2. kubectl get pods --selector bu=finance
+3. kubectl get all --selector env=prod --no-headers | wc -l
+4. kubectl get pods --selector "env=prod,bu=finance,tier=frontend"
+5. kubectl apply -f replicaset-definition-1.yaml
+
+
+1. kubectl get pods --selector env=dev | wc -l
+1. kubectl get pods --selector env=dev --no-headers | wc -l
+
+
+taints
+2. kubectl describe node node01 | grep Taint
+3. kubectl taint nodes node01 spray=mortein:NoSchedule
+4. kubectl run mosquito --image=nginx
+7. kubectl run bee --image=nginx
+8. kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+
+
+kubectl create deployment red --image=nginx --replicas=3 --dry-run=client -o yaml > blue.yaml
+
+kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3 --dry-run=client -o yam
+
+
+
+kubectl create deamonset elasticsearch --image=registry.k8s.io/fluentd-elasticsearch:1.2 -n=kube-system --dry-run=client -o yaml > blue.yaml
+kubectl run static-busybox --image=busybox --dry-run -0 yaml > static-busybox.yaml
+kubectl run static-busybox --image=busybox --dry-run=client -o yaml
+kubectl set image deployments/frontend simple-webapp=kodekloud/webapp-color:v2
+kubectl create deployment --image=kodekloud/webapp-color:v2 frontend --dry-run=client -o yaml > nginx-deployment.yaml
+kubectl create configmap 
+kubectl create configmap app-config --from-literal=APP_COLOR=blue
+kubectl create configmap webapp-config-map --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard --dry-run=client -o yaml > webapp-config-map.yaml
+kubectl create secrets generic app-secret --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard --dry-run=client -o yaml > webapp-config-map.yaml
+
+kubectl create secrets generic app-secret --from-file=app_secret.properties
+echo -n 'mysql' | base64
+echo -n 'bXlzcWw=' | base64 --decode
+
+kubectl get secret app-secret -o yaml
+
+kubectl run webapp --image=busybox -- --color green
+
+Summarize Commands
+> kubectl rollout status deployment/myapp-deployment
+> kubectl rollout history deployment/myapp-deployment
+> kubectl create –f deployment-definition.yml
+> kubectl get deployments
+> kubectl apply –f deployment-definition.yml
+> kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+> kubectl rollout undo deployment/myapp-deployment
+
+kubectl create secrets generic db-secret --from-literal=DB_Host=sql01 \
+										 --from-literal=DB_User=root \
+										 --from-literal=DB_Password=password123 \
+										 --dry-run=client -o yaml > webapp-scr.yaml
+
+
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123 --dry-run=client -o yaml
+kubectl create secret generic my-secret --from-literal=key1=supersecret --from-literal=key2=topsecret
+
+kubectl -n elastic-stack logs kibana
+
+
+
+
+critcl pods
+
+
+
+To inspect the logs stored in /log/app.log inside a Kubernetes pod and identify the user having login issues, follow these steps:
+
+Step 1: Find the Pod Name
+If you don’t already know the pod name, list the pods in the namespace:
+
+bash
+Copy code
+kubectl -n <namespace> get pods
+Replace <namespace> with the appropriate namespace (default if none is specified). Identify the pod running your application.
+
+Step 2: Access the Pod Shell
+Use kubectl exec to get an interactive shell inside the pod:
+
+bash
+Copy code
+kubectl -n <namespace> exec -it <pod-name> -- /bin/bash
+or, if the pod uses sh instead of bash:
+
+bash
+Copy code
+kubectl -n <namespace> exec -it <pod-name> -- /bin/sh
+
+
+Step 3: View the Log File
+Once inside the pod, inspect the log file at /log/app.log:
+
+View the last few lines of the log file:
+
+bash
+Copy code
+tail -n 50 /log/app.log
+Search for login issues (e.g., "failed" or "error"):
+
+bash
+Copy code
+grep -i "login" /log/app.log
+
+kubectl-controller-manager --pod-eviction-timeout=5m0s
+kubectl drain node-1 (move podes from node-1 to another pods, scheduler do not create pods on that node)
+kubectl drain node01 --ignore-daemonsets
+
+kubectl cordon node-1 (make node unschedulable, active pods stays runing on the pod)
+kubectl uncordon node-1 (make node schedulable)
+
+
+google cloud update cluster
+kubeadm upgrade plan
+kubeadm upgrade apply
+apt-get upgrade -y kubeadm=1.12.0-00
+kubeadm upgrade apply v1.12.0
+system restart kubelet services
+
+1. kubectl drain node-1
+2. apt-get upgrade -y kubeadm=1.12.0-00
+3. apt-get upgrade -y kubelet=1.12.0-00
+4. kubeadm upgrade node config --kubelet-version v1.12.0
+5. system restart kubelet services
+6. kubectl uncordon node-1
+
+
+
