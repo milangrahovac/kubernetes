@@ -1,7 +1,9 @@
 minikube start/stop
 minikube dashboard
 
-~  kubectl get pods -n kube-system
+kubectl config view
+
+kubectl get pods -n kube-system
 NAME                               READY   STATUS    RESTARTS         AGE
 coredns-5dd5756b68-9pmh6           1/1     Running   13 (194d ago)    221d
 etcd-minikube                      1/1     Running   12 (194d ago)    221d
