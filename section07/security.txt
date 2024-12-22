@@ -107,3 +107,41 @@ roleRef:
 Once created, you may authenticate into the kube-api server using the users credentials
 
 curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
+
+
+ssh-keygen
+openssl genrsa -out my-bank.key 1024
+openssl rsa -in my-bank -pubout > my-bank.pem
+
+
+Certificate authority
+
+generate key
+openssl genrsa -out cs.key 2048
+
+cartificate signing request
+openssl req -new key ca.key -subj "/CN=KUBERBETES-CA" -out ca.csr
+
+sign certificate
+opensll x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+
+Admin User
+
+generate key
+openssl genrsa -out admin.key 2048
+
+cartificate signing request
+openssl req -new key admin.key -subj "/CN=kube-admin/O=system:master" -out admin.csr
+
+sign certificate
+opensll x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+
+
+curl https://kube-apiserver:6443/api/v1/pors \
+--key admin.key --cert admin.crt --cacert ca.crt
+
+
+
+cat /etc/kubernetes/manifest/kube-apiserver.yaml
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
