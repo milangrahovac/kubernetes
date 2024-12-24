@@ -1,0 +1,98 @@
+1. Identify the certificate file used for the kube-api server.
+ls /etc/kubernetes/manifests/
+ cat /etc/kubernetes/manifests/kube-apiserver.yaml 
+ find:
+ --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+
+2. Identify the Certificate file used to authenticate kube-apiserver as a client to ETCD Server.
+file from the task 1
+find: 
+--etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+
+3. Identify the key used to authenticate kubeapi-server to the kubelet server.
+--kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+
+4. Identify the ETCD Server Certificate used to host ETCD server.
+cat /etc/kubernetes/manifests/etcd.yaml 
+
+5. Identify the ETCS server CA Root Certficeage used to serve ETCD server. 
+--trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+
+6. What is the Common Name (CN) configured on the Kube API Server Certificate?
+OpenSSL Syntax: openssl x509 -in file-path.crt -text -noout
+
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+Subject: CN = kube-apiserver
+
+7. What is the name of the CA who issued the Kube API Server Certificate?
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+Issuer: CN = kubernetes
+
+8. Which of the below alternate names is not configured on the Kube API Server Certificate?
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+from file check DNS:
+DNS:controlplane, DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, IP Address:172.20.0.1, IP Address:192.168.183.211
+answer: kube-master
+
+9. What is the Common Name (CN) configured on the ETCD Server certificate?
+cat /etc/kubernetes/manifests/etcd.yaml 
+cert path = /etc/kubernetes/pki/etcd/server.crt
+openssl x509 -in /etc/kubernetes/pki/etcd/server.crt -text -noout
+answer: Subject: CN = controlplane
+
+10. How long, from the issued date, is the Kube-API Server Certificate valid for?
+File: /etc/kubernetes/pki/apiserver.crt
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+Validity
+            Not Before: Dec 23 21:07:31 2024 GMT
+            Not After : Dec 23 21:12:31 2025 GMT
+answer : 1 year
+
+11. How long, from the issued date, is the Root CA Certificate valid for?
+File: /etc/kubernetes/pki/ca.crt
+openssl x509 -in /etc/kubernetes/pki/ca.crt -text -noout
+        Validity
+            Not Before: Dec 23 21:07:31 2024 GMT
+            Not After : Dec 21 21:12:31 2034 GMT
+answer: 10 years
+
+12. Kubectl suddenly stops responding to your commands. Check it out! Someone recently modified the /etc/kubernetes/manifests/etcd.yaml file
+
+
+You are asked to investigate and fix the issue. Once you fix the issue wait for sometime for kubectl 
+to respond. Check the logs of the ETCD container.
+
+kubectl get pods
+Unable to connect to the server: net/http: TLS handshake timeout
+docker ps -a | grep kube-apiserver
+or 
+crictl ps -a | grep kube-apiserver (for environments using crion insted of docker)
+crictl logs 74d46aba70f4c
+can not connect to the etcd server on port 2379
+connect to {Addr: "127.0.0.1:2379", ServerName: "127.0.0.1:2379", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:2379: connect: connection refused"
+
+crictl ps -a | grep etcd
+crictl logs f3d3ea5aff4d2
+
+find "etcdmain/etcd.go" etc/kubernetes/pki/etcd/server-certificate.crt no such file
+
+cat /etc/kubernetes/manifests/etcd.yaml | grep server-certificate.crt
+--cert-file=/etc/kubernetes/pki/etcd/server-certificate.crt
+
+nano /etc/kubernetes/manifests/etcd.yaml
+change cert file name 
+from: --cert-file=/etc/kubernetes/pki/etcd/server-certificate.crt
+to: --cert-file=/etc/kubernetes/pki/etcd/server.crt
+
+crictl ps -a | grep etcd
+crictl logs e3605bcf9a9ee
+
+crictl ps -a | grep kube-api
+
+14. The kube-api server stopped again! Check it out. Inspect the kube-api server logs and identify the root cause and fix the issue.
+
+
+Run crictl ps -a command to identify the kube-api server container. Run crictl logs container-id command to view the logs.
+
+crictl ps -a | grep kube-apiserver
+crictl logs efe6f0c55cbb3
