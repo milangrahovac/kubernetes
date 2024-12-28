@@ -8,7 +8,7 @@ restore snapshot
 1. stop service
 service kube-apiserver stop
 2. restore backup
-ETCD_API=3 etcdctl snapshot restart snapshot.db --data-dir /var/lib/etcd-from-backbup
+ETCD_API=3 etcdctl snapshot restore snapshot.db --data-dir /var/lib/etcd-from-backup
 3. reload deamon
 systemctl deamon-reload
 service etcd restart
@@ -54,9 +54,18 @@ check out the solution video for the Backup and Restore Lab.
 
 134. lab - kubernetes backup and restore 
 
+2. kubectl describe pod etcd-controlplane -n kube-system
+6. The master node in our cluster is planned for a regular maintenance reboot tonight. 
+While we do not anticipate anything to go wrong, we are required to take the necessary backups. 
+Take a snapshot of the ETCD database using the built-in snapshot functionality.
+Store the backup file at location /opt/snapshot-pre-boot.db
+
+
 ls var/lib/etcd 
 cat var/lib/etcd.etcd.yaml
 create a snapshot
+
+export ETCDCTL_API=3
 
 etcdctl snapshot save \
 --endpoints=127.0.0.1:2379 \
@@ -65,3 +74,19 @@ etcdctl snapshot save \
 --key=/etc/kubernetes/pki/etcd/server.key \
 /opt/snapshot-pre-boot.db
 
+9. Luckily we took a backup. Restore the original state of the cluster using the backup file.
+
+restore snapshot
+etcdctl snapshot restore /opt/snapshot-pre-boot.db --data-dir /var/lib/etcd-from-backup
+
+nano /etc/kubernetes/manifests/etcd.yaml 
+change etcd-data path to /var/lib/etcd-from-backup
+
+may requre restart
+kubectl delete pod etcd-controlplane -n kube-system
+
+
+3. reload deamon
+systemctl deamon-reload
+service etcd restart
+service kube-apiserver start

@@ -1,0 +1,11 @@
+kubectl proxy
+curl http://kube-master.6443 -k (list all options) 
+curl http://kube-master.6443/version
+curl http://kube-master.6443/api/v1/pods
+/metrics
+/healthz
+/version
+/api - core
+/apis - named
+/logs
+

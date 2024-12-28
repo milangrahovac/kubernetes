@@ -1,0 +1,13 @@
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: jane
+spec:
+  expirationSeconds: 600
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  request:
+    dlasjdklKJDSKJksdeKLKELKNZXMNZkhJKLQKLQWOPAXMQSVBLSKADLKDLSAKFKAD32904KS37c
+    J90231274KBEHDHN434341khjnJHJHKLKLHJLKHklhklerkjekrjekWEWIOEWMKMWkldskdlWLK
