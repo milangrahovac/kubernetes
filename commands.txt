@@ -3,6 +3,9 @@ minikube dashboard
 
 kubectl config view
 
+change context to cluster1
+kubectl config use-context cluster1
+
 kubectl get pods -n kube-system
 NAME                               READY   STATUS    RESTARTS         AGE
 coredns-5dd5756b68-9pmh6           1/1     Running   13 (194d ago)    221d
@@ -190,3 +193,86 @@ taints
 kubectl create deployment red --image=nginx --replicas=3 --dry-run=client -o yaml > blue.yaml
 
 kubectl create deployment webapp --image=kodekloud/webapp-color --replicas=3 --dry-run=client -o yam
+
+
+How is ETCD configured for cluster2?
+
+Remember, you can access the clusters from student-node using the kubectl tool. 
+You can also ssh to the cluster nodes from the student-node.
+Make sure to switch the context to cluster2:
+
+ssh cluster2-controlplane 
+ls /etc/kubernetes/manifests/
+kubectl describe pod kube-apiserver-cluster2-controlplane -n kube-system 
+check       --etcd-servers=https://192.18.149.12:2379
+this is external server
+
+
+kubectl config use-context cluster2
+ps -ef | grep -i etcd
+ /usr/local/bin/etcd --name etcd-server --data-dir=/var/lib/etcd-data 
+ --cert-file=/etc/etcd/pki/etcd.pem 
+ --key-file=/etc/etcd/pki/etcd-key.pem 
+ --peer-cert-file=/etc/etcd/pki/etcd.pem 
+ --peer-key-file=/etc/etcd/pki/etcd-key.pem 
+ --trusted-ca-file=/etc/etcd/pki/ca.pem 
+ --peer-trusted-ca-file=/etc/etcd/pki/ca.pem 
+ --peer-client-cert-auth 
+ --client-cert-auth
+--initial-advertise-peer-urls https://192.18.149.12:2380 
+--listen-peer-urls https://192.18.149.12:2380 
+--advertise-client-urls https://192.18.149.12:2379 
+--listen-client-urls https://192.18.149.12:2379,https://127.0.0.1:2379 
+--initial-cluster-token etcd-cluster-1 
+--initial-cluster etcd-server=https://192.18.149.12:2380 
+--initial-cluster-state new
+
+
+How many nodes are part of the ETCD cluster that etcd-server is a part of?
+ETCDCTL_API=3 etcdctl --endpoints=127.0.0.1:2379 --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/etcd.pem --key=/etc/etcd/pki/etcd-key.pem member list
+
+return:
+a5ea15b1d2ab8e57, started, etcd-server, https://192.18.149.12:2380, https://192.18.149.12:2379, false
+
+
+
+Take a backup of etcd on cluster1 and save it on the student-node at the path /opt/cluster1.db
+
+
+
+If needed, make sure to set the context to cluster1 (on the student-node):
+ETCDCTL_API=3 etcdctl snapshot save /opt/cluster1.db --endpoints=192.18.149.20:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+
+ scp cluster1-controlplane:/opt/cluster1.db /opt/
+
+
+ An ETCD backup for cluster2 is stored at /opt/cluster2.db. Use this snapshot file to carryout a restore on cluster2 to a new path /var/lib/etcd-data-new.
+
+
+
+Once the restore is complete, ensure that the controlplane components on cluster2 are running.
+
+
+The snapshot was taken when there were objects created in the critical namespace on cluster2. These objects should be available post restore.
+
+
+If needed, make sure to set the context to cluster2 (on the student-node):
+
+student-node ~ ➜  kubectl config use-context cluster2
+Switched to context "cluster2".
+
+scp /opt/cluster2.db etcd-server:/root
+
+ETCDCTL_API=3 etcdctl snapshot restore /root/cluster2.db --data-dir=/var/lib/etcd-data-new
+chown -R etcd:etcd etcd-data-new/
+
+change dir path
+nano /etc/systemd/system/etcd.service 
+systemctl daemon-reload
+systemctl restart etcd
+
+kubectl delete pod kube-apiserver-cluster2-controlplane -n kube-system
+kubectl delete pod kube-controller-manager-cluster2-controlplane -n kube-system 
+kubectl delete pod kube-scheduler-cluster2-controlplane -n kube-system 
+ssh cluster2-controlplane
+systemctl restart kubelet

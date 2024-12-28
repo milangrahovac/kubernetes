@@ -96,3 +96,20 @@ Run crictl ps -a command to identify the kube-api server container. Run crictl l
 
 crictl ps -a | grep kube-apiserver
 crictl logs efe6f0c55cbb3
+connect to {Addr: "127.0.0.1:2379", ServerName: "127.0.0.1:2379", }. Err: connection error: desc = "transport: authentication handshake failed: 
+
+crictl ps -a | grep etcd
+crictl logs e3605bcf9a9ee
+
+cat /etc/kubernetes/manifests/kube-apiserver.yaml 
+controlplane ~ ➜  cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep "\-\-etcd"
+    - --etcd-cafile=/etc/kubernetes/pki/ca.crt
+    - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+    - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+    - --etcd-servers=https://127.0.0.1:2379
+
+     ls /etc/kubernetes/pki/etcd/
+
+nano /etc/kubernetes/manifests/kube-apiserver.yaml 
+change from: --etcd-cafile=/etc/kubernetes/pki/ca.crt
+to : --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt

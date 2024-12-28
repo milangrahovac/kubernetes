@@ -1,0 +1,33 @@
+1. user create a key
+openssl genrsa -out jane.key 2048
+
+2. send the key to the admin then the admin create csr
+openssl req -new -key jane.key -subj "CN=jane" -out jane.csr
+
+-
+cat jane.csr | base 64 -w 0
+create jane-cer file
+-
+
+3. all csr can be seen by admins
+kubectl get csr
+kubectl certificate approve jane
+kubectl get csr jane -o yaml
+
+decode
+echo "dsadkasklekWKLMERJ232lMmsdksm" | base64 --dec
+
+cat /etc/kubernetes/manifests/kube-controller-manager.yaml
+
+
+test
+2. Create a CertificateSigningRequest object with the name akshay with the contents of the akshay.csr file
+As of kubernetes 1.19, the API to use for CSR is certificates.k8s.io/v1.
+Please note that an additional field called signerName should also be added when creating CSR. 
+For client authentication to the API server we will use the built-in signer kubernetes.io/kube-apiserver-client.
+
+openssl req -new -key akshay.key -subj "CN=akshay" -out akshay.csr
+
+
+kubectl certificate deny agent-smith
+kubectl delete csr agent-smith
