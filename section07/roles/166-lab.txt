@@ -1,0 +1,38 @@
+2. How many Cluster roles exist on the cluset?
+kubectl get ClusterRoles --no-headers | wc -l
+
+3. How many ClusterRoleBindings exist on the cluster?
+kubectl get ClusterRoleBinding --no-headers | wc -l
+
+4. What namespace is the cluster-admin clusterrole part of?
+cluster roles are cluster wide and not part of any namespace
+
+5. What user/groups are the cluster-admin role bound to?
+The ClusterRoleBinding for the role is with the same name.
+kubectl describe ClusterRoleBinding cluster-admin
+result: system:masters  
+
+6. What level of permission does the cluster-admin role grant?
+Inspect the cluster-admin role's privileges.
+kubectl describe clusterrole cluster-admin
+Perform any act on any resource
+
+7. A new user michelle joined the team. She will be focusing on the nodes in the cluster. 
+Create the required ClusterRoles and ClusterRoleBindings so she gets access to the nodes.
+
+kubectl auth can-i create nodes --as michelle 
+kubectl get nodes --as michelle
+kubectl create clusterrole nodes-admin --verb=get,list,watch --resource=nodes
+kubectl create clusterrolebinding nodes-admin-binding --clusterrole=nodes-admin --user=michelle
+
+8. michelle's responsibilities are growing and now she will be responsible for storage as well. 
+Create the required ClusterRoles and ClusterRoleBindings to allow her access to Storage.
+Get the API groups and resource names from command kubectl api-resources. Use the given spec:
+
+ClusterRole: storage-admin
+Resource: persistentvolumes
+Resource: storageclasses
+ClusterRoleBinding: michelle-storage-admin
+ClusterRoleBinding Subject: michelle
+ClusterRoleBinding Role: storage-admin
+
