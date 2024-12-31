@@ -36,3 +36,8 @@ ClusterRoleBinding: michelle-storage-admin
 ClusterRoleBinding Subject: michelle
 ClusterRoleBinding Role: storage-admin
 
+_
+kubectl api-resources
+kubectl create clusterrole storage-admin --resource=persistentvolumes,storageclasses --verb=get,list,create,watch
+kubectl create clusterrolebinding michelle-storage-admin --clusterrole=storage-admin --user=michelle
+kubectl get storageclass --as michelle
