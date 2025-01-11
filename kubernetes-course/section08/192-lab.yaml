@@ -1,0 +1,59 @@
+# task 4
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+spec:
+  containers:
+    - name: webapp
+      image: kodekloud/event-simulator
+      volumeMounts:
+        - mountPath: /log
+          name: webapp
+  volumes:
+    - name: webapp
+      hostPath:
+        path: /var/log/webapp
+        type: Directory
+
+
+# task 5
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-log
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 100Mi
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /pv/log
+
+
+# task 6
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-log-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+
+
+# task 9
+Why is the claim not bound to the available Persistent Volume?
+access mode mismatch
+
+# task 10.
+kubectl replace --force -f pvc-log.yaml
+
+# task 12.
+# Update the webapp pod to use the persistent volume claim as its storage.
+# Replace hostPath configured earlier with the newly created PersistentVolumeClaim.

@@ -319,3 +319,10 @@ kubectl create secret generic my-secret --from-literal=key1=supersecret --from-l
 critcl pods
 
 kubectl get networkpolicies.networking.k8s.io
+
+
+how to access pod
+kubectl exec webapp -- cat /log/app.log
+
+kubectl get pv
+kubectl get pvc
