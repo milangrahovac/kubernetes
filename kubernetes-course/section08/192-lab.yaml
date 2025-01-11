@@ -57,3 +57,12 @@ kubectl replace --force -f pvc-log.yaml
 # task 12.
 # Update the webapp pod to use the persistent volume claim as its storage.
 # Replace hostPath configured earlier with the newly created PersistentVolumeClaim.
+cat /pv/log/app.log 
+
+pv deleted but not available
+
+15. Try deleting the PVC and notice what happens.
+
+If the command hangs, you can use CTRL + C to get back to the bash prompt OR check the status of the pvc 
+from another terminal
+kubectl delete pvc claim-log-1 
