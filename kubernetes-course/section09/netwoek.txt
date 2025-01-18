@@ -1,0 +1,5 @@
+ps aux | grep kube-api-server
+
+ip tables -L -t nat | grep db-service
+
+cat /var/log/kube-proxy.log

@@ -1,0 +1,7 @@
+1. In this practice test we will install weave-net POD networking solution to the cluster. 
+Let us first inspect the setup.
+We have deployed an application called app in the default namespace. What is the state of the pod?
+
+kubectl get pods
+
+2. Inspect why the POD is not running.

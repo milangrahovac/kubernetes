@@ -1,0 +1,26 @@
+1. What network range are the nodes in the cluster part of?
+kubectl get nodes -o wide
+
+2. What is the range of IP addresses configured for PODs on this cluster?
+kubectl get all --all-namespaces
+kubectl logs weave-net-lwpxm -n kube-system 
+kubectl logs weave-net-lwpxm -n kube-system | grep range
+
+3. cat /etc/kubernetes/manifests/kube-apiserver.yaml 
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep range
+
+4. How many kube-proxy pods are deployed in this cluster?
+kubectl get all --all-namespaces | grep proxy
+kubectl get pods -n kube-system 
+kubectl get pods -n kube-system | grep proxy
+
+5. What type of proxy is the kube-proxy configured to use?
+kubectl logs kube-proxy-qhpq4 -n kube-system 
+answer: using ip table proxier
+
+6.  How does this Kubernetes cluster ensure that a kube-proxy pod runs on all nodes in the cluster?
+Inspect the kube-proxy pods and try to identify how they are deployed.
+kubectl get all --all-namespace
+
+search for deamonset
+

@@ -1,0 +1,39 @@
+3. What is the network interface configured for cluster connectivity on the controlplane node?
+
+ip address
+
+in the result search for the ip address of the node controlplane
+
+ip address show eth0
+
+6. What is the MAC address assigned to node01?
+
+ssh node01
+
+
+7. We use Containerd as our container runtime. 
+What is the interface/bridge created by Containerd on the controlplane node?
+
+ip address show type bridge
+answer: cni0
+
+8. What is the state of the interface cni0?
+UP
+
+9. If you were to ping google from the controlplane node, which route does it take?
+What is the IP address of the Default Gateway?
+
+ip route 
+
+10. What is the port the kube-scheduler is listening on in the controlplane node?
+
+netstat -npl | grep -i scheduler
+
+11. Notice that ETCD is listening on two ports. Which of these have more client connections established?
+
+netstat -npl | grep -i etcd
+netstat -npa | grep -i etcd
+netstat -npa | grep -i etcd | grep -i 2379 | wc -l
+netstat -npa | grep -i etcd | grep -i 2380 | wc -l
+
+
