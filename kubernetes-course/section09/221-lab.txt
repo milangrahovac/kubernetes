@@ -1,0 +1,28 @@
+2. What is the Networking Solution used by this cluster?
+ls /etc/cni/net.d/
+cat /etc/cni//net.d/10-weave.conflist 
+
+3. How many weave agents/peers are deployed in this cluster?
+kubectl get pods -n kube-system -o wide
+
+4. On which nodes are waves peers present?
+kubectl get pods -n kube-system -o wide
+
+5. Identify the name of the bridge network/interface created by weave on each node?
+ip addr
+ip addr | grep weave
+
+6. What is the POD IP address range configured by weave?
+kubectl logs -n kube-system weave-net-d28jt 
+kubectl logs -n kube-system weave-net-d28jt | grep range
+
+7. What is the default gateway configured on the PODs scheduled on node01?
+kubectl run busybox --image=busybox --dry-run
+kubectl run busybox --image=busybox --dry-run=client -o yaml -- sleep 1000 > busybox.yaml
+
+
+controlplane ~ ➜  nano busybox.yaml  -> add under spec -> nodeName: node01
+kubectl apply -f busybox.yaml 
+kubectl exec busybox -- ip route
+return : default via 10.244.192.0 dev eth0 
+10.244.0.0/16 dev eth0 scope link  src 10.244.192.1 
