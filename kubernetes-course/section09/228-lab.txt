@@ -1,0 +1,84 @@
+1. Identify the DNS solution implemented in this cluster.
+kubectl get pods -n kube-system 
+there is an pod "core-dns"
+
+2. How many pods of the DNS server are deployed?
+2 pods
+
+3. What is the name of the service created for accessing CoreDNS?
+kubectl get service -n kube-system 
+
+
+4. What is the IP of the CoreDNS server that should be configured on PODs to resolve services?
+kubectl describe service kube-dns -n kube-system 
+IP: 172.20.0.10
+
+5. Where is the configuration file located for configuring the CoreDNS service?
+kubectl describe pod coredns-77d6fd4654-4j5ts -n kube-system 
+    Args:
+      -conf
+      /etc/coredns/Corefile
+
+6. How is the Corefile passed into the CoreDNS POD?
+kubectl describe pod coredns-77d6fd4654-4j5ts -n kube-system 
+config map object
+
+7. What is the name of the ConfigMap object created for Corefile?
+kubectl get pod coredns-77d6fd4654-4j5ts -n kube-system -o yaml
+coredns
+
+8. What is the root domain/zone configured for this kubernetes cluster?
+kubectl get configmap -n kube-system 
+kubectl get configmap -n kube-system 
+answer: kubernetes cluster.local 
+
+9. We have deployed a set of PODs and Services in the default and payroll namespaces. 
+Inspect them and go to the next question.
+
+10. We have deployed a set of PODs and Services in the default and payroll namespaces. 
+Inspect them and go to the next question.
+kubectl get pods -n default
+kubectl get pods -n payroll
+
+11. What name can be used to access the hr web server from the test Application?
+You can execute a curl command on the test pod to test. Alternatively, the test Application also has a UI. 
+Access it using the tab at the top of your terminal named test-app.
+kubectl get svc
+kubectl describe svc web-service 
+web-service
+
+12. Which of the names CANNOT be used to access the HR service from the test pod?
+web-service.default.pod
+
+13. Which of the below name can be used to access the payroll service from the test application?
+kubectl get pods -n payroll 
+kubectl get svc -n payroll 
+web-service.payroll
+
+14. Which of the below name CANNOT be used to access the payroll service from the test application?
+web-service.payroll.svc.cluster
+
+15. We just deployed a web server - webapp - that accesses a database mysql - server. 
+However the web server is failing to connect to the database server. Troubleshoot and fix the issue.
+
+
+They could be in different namespaces. First locate the applications. 
+The web server interface can be seen by clicking the tab Web Server at the top of your terminal.
+kubectl get all --all-namespaces
+
+webapp is in default ns
+mysql is in payroll ns
+
+
+kubectl get svc -n payroll 
+kubectl edit deployment webapp 
+change mysql to mysql.payroll
+      containers:
+      - env:
+        - name: DB_Host
+          value: mysql.payroll
+
+
+16. From the hr pod nslookup the mysql service and redirect the output to a file /root/CKA/nslookup.out
+kubectl exec hr -- nslookup mysql.payroll
+kubectl exec hr -- nslookup mysql.payroll > /root/CKA/nslookup.out
