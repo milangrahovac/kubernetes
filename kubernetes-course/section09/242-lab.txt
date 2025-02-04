@@ -1,0 +1,60 @@
+1. We have deployed Ingress Controller, resources and applications. Explore the setup.
+
+kubectl get nodes
+kubectl get deploy
+kubectl get all --all-namespaces
+
+2. Which namespace is the INgress Controller deployerd in?
+ingress-nginx
+
+3. What is the name of the INgress Controller Deployment?
+ingress-nginx-controller
+
+4. Which namespace are the applications deployed in?
+NAMESPACE       NAME                                                  DESIRED   CURRENT   READY   AGE
+app-space       replicaset.apps/default-backend-5cd488d85c            1         1         1       46s
+app-space       replicaset.apps/webapp-video-cb475db9c                1         1         1       46s
+app-space       replicaset.apps/webapp-wear-6886df6554      
+
+app-space
+
+5. How many applications are deployed in the app-space namespace?
+kubectl get deployments -n app-space
+
+6. Which namespace is the Ingress Resource deployed in?
+kubectl get ingress -A
+
+7. What is the name of the Ingress Resource?
+kubectl get ingress -A
+ingress-wear-watch
+
+8. What is the Host configured on the Ingress resource?
+kubectl get ingress -A
+All Hosts(*)
+
+9. What backend is the /wear path on the Ingress configured with?
+kubectl describe ingress ingress-wear-watch -n app-space
+Host        Path  Backends
+  ----        ----  --------
+  *           
+              /wear    wear-service:8080 (172.17.0.4:8080)
+              /watch   video-service:8080 (172.17.0.5:8080)
+Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /
+              nginx.ingress.kubernetes.io/ssl-redirect: false
+
+
+10. At what path is the video streaming application made available on the Ingress?
+/watch
+
+11. If the requirement does not match any of the configured paths in the Ingress, 
+to which service are the requests forwarded?
+kubectl describe ingress ingress-wear-watch -n app-space 
+
+Name:             ingress-wear-watch
+Labels:           <none>
+Namespace:        app-space
+Address:          172.20.200.67
+Ingress Class:    <none>
+Default backend:  <default>
+
+answer: default

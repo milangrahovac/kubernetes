@@ -1,0 +1,38 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  creationTimestamp: "2025-02-02T17:51:24Z"
+  generation: 2
+  name: ingress-wear-watch
+  namespace: app-space
+  resourceVersion: "2592"
+  uid: da2e3b27-ebb0-464a-9f68-1c0f88b2b945
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: webapp-wear
+                port:
+                  number: 8080
+            path: /wear
+            pathType: Prefix
+          - backend:
+              service:
+                name: webapp-video
+                port:
+                  number: 8080
+            path: /watch
+            pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+      - ip: 173.20.200.67

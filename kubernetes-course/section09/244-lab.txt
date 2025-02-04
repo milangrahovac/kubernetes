@@ -1,0 +1,48 @@
+1. We have deployed two applications. Explore the setup.
+kubectl get all --all-namespaces
+kubectl get all -n app-space 
+kubectl get pod -A
+
+2. kubectl get all --all-namespaces
+kubectl create namespace ingress-nginx
+
+3. The NGINX Ingress Controller requires a ConfigMap object. 
+Create a ConfigMap object with name ingress-nginx-controller in the ingress-nginx namespace.
+kubectl create configmap ingress-nginx-controller -n ingress-nginx 
+kubectl get configmaps -n ingress-nginx 
+kubectl describe configmap ingress-nginx-controller -n ingress-nginx 
+
+4. The NGINX Ingress Controller requires two ServiceAccounts. 
+Create both ServiceAccount with name ingress-nginx and ingress-nginx-admission in the ingress-nginx namespace.
+kubectl create serviceaccount ingress-nginx -n ingress-nginx 
+kubectl create serviceaccount ingress-nginx-admission -n ingress-nginx 
+
+
+5. We have created the Roles, RoleBindings, ClusterRoles, and ClusterRoleBindings for the ServiceAccount. 
+Check it out!!
+kubectl get roles -n ingress-nginx 
+kubectl get rolebindings.rbac.authorization.k8s.io -n ingress-nginx
+kubectl describe roles ingress-nginx -n ingress-nginx 
+kubectl describe rolebindings.rbac.authorization.k8s.io ingress-nginx -n ingress-nginx 
+
+6. Let us now deploy the Ingress Controller. Create the Kubernetes objects using the given file.
+The Deployment and it's service configuration is given at /root/ingress-controller.yaml. 
+There are several issues with it. Try to fix them.
+Note: Do not edit the default image provided in the given file. 
+The image validation check passes when other issues are resolved.
+
+kubectl create -f /root/ingress-controller.yaml
+nano  /root/ingress-controller.yaml
+edit spacing in row 73
+edit row 13 - fix namespace
+edit row 137 0 change nodeport to nodePort
+ingress-nginx 
+
+7. Create the ingress resource to make the applications available at /wear and /watch on the Ingress service.
+Also, make use of rewrite-target annotation field: -
+nginx.ingress.kubernetes.io/rewrite-target: /
+Ingress resource comes under the namespace scoped, so don't forget 
+to create the ingress in the app-space namespace.
+
+kubectl get deploy -n app-space 
+kubectl get svc -n app-space 
