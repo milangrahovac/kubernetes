@@ -31,3 +31,18 @@ There are several issues with it. Try to fix them.
 Note: Do not edit the default image provided in the given file. 
 The image validation check passes when other issues are resolved.
 
+kubectl create -f /root/ingress-controller.yaml
+nano  /root/ingress-controller.yaml
+edit spacing in row 73
+edit row 13 - fix namespace
+edit row 137 0 change nodeport to nodePort
+ingress-nginx 
+
+7. Create the ingress resource to make the applications available at /wear and /watch on the Ingress service.
+Also, make use of rewrite-target annotation field: -
+nginx.ingress.kubernetes.io/rewrite-target: /
+Ingress resource comes under the namespace scoped, so don't forget 
+to create the ingress in the app-space namespace.
+
+kubectl get deploy -n app-space 
+kubectl get svc -n app-space 

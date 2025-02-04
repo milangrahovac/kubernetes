@@ -14,25 +14,23 @@ metadata:
   namespace: app-space
   resourceVersion: "2592"
   uid: da2e3b27-ebb0-464a-9f68-1c0f88b2b945
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - http:
         paths:
           - backend:
               service:
-                name: wear-service
+                name: webapp-wear
                 port:
                   number: 8080
             path: /wear
             pathType: Prefix
           - backend:
               service:
-                name: video-service
+                name: webapp-video
                 port:
                   number: 8080
-            path: /stream
+            path: /watch
             pathType: Prefix
 status:
   loadBalancer:

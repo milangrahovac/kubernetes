@@ -1,0 +1,68 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wear-watch
+  namespace: app-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: wear-service
+                port:
+                  number: 8080
+            path: /wear
+            pathType: Prefix
+          - backend:
+              service:
+                name: video-service
+                port:
+                  number: 8080
+            path: /watch
+            pathType: Prefix
+# status:
+#   loadBalancer:
+#     ingress:
+#       - ip: 173.20.200.67
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: "2025-02-02T20:38:42Z"
+  generation: 4
+  name: ingress-svc
+  namespace: app-space
+  resourceVersion: "4880"
+  uid: 3d0b7af1-6d9f-4647-8393-2ae069baef1b
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: wear-service
+                port:
+                  number: 8080
+            path: /wear
+            pathType: Exact
+          - backend:
+              service:
+                name: video-service
+                port:
+                  number: 8080
+            path: /watch
+            pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+      - ip: 172.20.112.188
