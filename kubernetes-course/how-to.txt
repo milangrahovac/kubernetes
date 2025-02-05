@@ -90,3 +90,7 @@ Reference:
 https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 
 https://kubernetes.io/docs/reference/kubectl/conventions/
+
+check apiserver
+kubectl get pods -n kube-system 
+kubectl exec -it kube-apiserver-controlplane -n kube-system -- kube-apiserver -h

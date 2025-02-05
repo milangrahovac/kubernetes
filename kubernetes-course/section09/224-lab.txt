@@ -21,6 +21,5 @@ answer: using ip table proxier
 6.  How does this Kubernetes cluster ensure that a kube-proxy pod runs on all nodes in the cluster?
 Inspect the kube-proxy pods and try to identify how they are deployed.
 kubectl get all --all-namespace
-
 search for deamonset
 

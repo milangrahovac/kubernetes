@@ -46,3 +46,5 @@ to create the ingress in the app-space namespace.
 
 kubectl get deploy -n app-space 
 kubectl get svc -n app-space 
+
+k logs ingress-controller -n app-space

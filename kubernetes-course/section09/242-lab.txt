@@ -58,3 +58,91 @@ Ingress Class:    <none>
 Default backend:  <default>
 
 answer: default
+
+12. Now view the Ingress Service using the tab at the top of the terminal. Which page do you see?
+Click on the tab named Ingress.
+404
+
+13. View the applications by appending /wear and /watch to the URL you opened in the previous step.
+open link
+
+14. View the applications by appending /wear and /watch to the URL you opened in the previous step.
+
+15. You are requested to change the URLs at which the applications are made available.
+Make the video application available at /stream.
+
+kubectl describe ingress ingress-wear-watch -n app-space 
+kubectl edit ingress ingress-wear-watch -n app-space 
+change watch to stream
+
+View the Video application using the /stream URL in your browser.
+Click on the Ingress tab above your terminal, if its not open already, 
+and append /stream to the URL in the browser.
+
+16. A user is trying to view the /eat URL on the Ingress Service. Which page would he see?
+If not open already, click on the Ingress tab above your terminal, and append /eat to the URL in the browser.
+404
+
+17. Due to increased demand, your business decides to take on a new venture. 
+You acquired a food delivery company. Their applications have been migrated over to your cluster.
+
+Inspect the new deployments in the app-space namespace.
+kubectl get deploy -n app-space
+kubectl get pods -n app-space
+
+18. You are requested to add a new path to your ingress to make the food delivery application 
+available to your customers.
+Make the new application available at /eat.
+
+kubectl get svc -n app-space 
+kubectl edit ingress ingress-wear-watch -n app-space 
+add 
+      - backend:
+          service:
+            name: video-service
+            port:
+              number: 8080
+        path: /stream
+        pathType: Prefix
+
+19. View the Food delivery application using the /eat URL in your browser.
+Click on the Ingress tab above your terminal, if its not open already, and append /eat to the URL in the browser.
+
+20. A new payment service has been introduced. Since it is critical, the new application is deployed in its own namespace.
+
+Identify the namespace in which the new application is deployed.
+kubectl get ns
+kubectl get pods -A
+kubectl get deploy -n critical-space 
+
+21. What is the name of the deployment of the new application?
+kubectl get deploy -n critical-space 
+webapp-pay 
+
+22. You are requested to make the new application available at /pay.
+
+
+Identify and implement the best approach to making this application available 
+on the ingress controller and test to make sure its working. Look into annotations: 
+rewrite-target as well.
+
+kubectl get svc -n critical-space 
+kubectl create ingress
+kubectl create ingress ingress-pay -n critical-space --rule="/pay=pay-service:8282"
+kubectl get ingress -n critical-space 
+kubectl describe ingress ingress-pay -n critical-space 
+
+kubectl get pods -n critical-space 
+kubectl logs webapp-pay-6888bbb889-g8l8q -n critical-space 
+
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+23. View the Payment application using the /pay URL in your browser.
+
+Click on the Ingress tab above your terminal, if its not open already, 
+and append /pay to the URL in the browser.
+
+
+
+
