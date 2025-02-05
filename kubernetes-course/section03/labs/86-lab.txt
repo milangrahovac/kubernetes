@@ -1,0 +1,60 @@
+1. Which of the below combination is correct for Mutating and validating admission controllers ?
+NamespaceAutoProvision - Mutating, NamespaceExists - Validating
+
+2. What is the flow of invocation of admission controllers?
+First Mutating then Validating
+
+3. Create namespace webhook-demo where we will deploy webhook components
+kubectl create ns webhook-demo
+
+4. Create TLS secret webhook-server-tls for secure webhook communication in webhook-demo namespace.
+We have already created below cert and key for webhook server which should be used to create secret.
+Certificate : /root/keys/webhook-server-tls.crt
+Key : /root/keys/webhook-server-tls.key
+
+
+kubectl -n webhook-demo create secret tls webhook-server-tls --cert=/root/keys/webhook-server-tls.crt --key=/root/keys/webhook-server-tls.key
+e.g. kubectl create secret tls tls-secret --cert=path/to/tls.crt --key=path/to/tls.key
+
+5. Create webhook deployment now.
+We have already added sample deployment definition under /root/webhook-deployment.yaml 
+so just create deployment with that definition.
+kubectl apply -f /root/webhook-deployment.yaml
+
+6. Create webhook service now so that admission controller can communicate with webhook.
+We have already added sample service definition under /root/webhook-service.yaml 
+so just create service with that definition.
+kubectl create -f /root/webhook-service.yaml 
+
+7. We have added MutatingWebhookConfiguration under /root/webhook-configuration.yaml.
+If we apply this configuration which resource and actions it will affect?
+Pod with create operation
+
+8. Now lets deploy MutatingWebhookConfiguration in /root/webhook-configuration.yaml
+kubectl create -f /root/webhook-configuration.yaml
+
+9. n previous steps we have deployed demo webhook which does below
+- Denies all request for pod to run as root in container if no securityContext is provided.
+- If no value is set for runAsNonRoot, a default of true is applied, and the user ID defaults to 1234
+- Allow to run containers as root if runAsNonRoot set explicitly to false in the securityContext
+In next steps we have added some pod definitions file for each scenario. 
+Deploy those pods with existing definitions file and validate the behaviour of our webhook
+
+kubectl create -f /root/pod-with-defaults.yaml
+
+10. What are runAsNonRoot and runAsUser values for previously created pods securityContext?
+
+We did not specify any securityContext values in pod definition 
+so check out the changes done by mutation webhook in pod
+kubectl get pods pod-with-defaults -o yaml | grep "run"
+
+12. Deploy pod with a securityContext explicitly allowing it to run as root
+
+
+We have added pod definition file under /root/pod-with-override.yaml
+Validate securityContext after you deploy this pod
+kubectl apply -f /root/pod-with-override.yaml
+
+13. Deploy a pod with a conflicting securityContext i.e. pod running with a user id of 0 (root)
+We have added pod definition file under /root/pod-with-conflict.yaml
+Mutating webhook should reject the request as its asking to run as root user without setting runAsNonRoot: false
