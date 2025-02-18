@@ -1,0 +1,45 @@
+1. The helm package that contains all of the resource definitions necessary to run an application, 
+tool, or service inside of a Kubernetes cluster is known as a …
+chart
+
+2. We cannot install the same chart multiple times on the same Kubernetes Cluster.
+False
+
+3. Which command is used to search for a wordpress helm chart package from the Artifact Hub?
+helm search hub wordpress
+
+4. Search for a consul helm chart package from the Artifact Hub and identify 
+the APP VERSION for the Official HashiCorp Consul Chart.
+https://artifacthub.io/packages/helm/hashicorp/consul
+1.20.2
+
+5. Add bitnami helm chart repository in the controlplane node.
+The url for bitnami repository is https://charts.bitnami.com/bitnami
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+6. Which command is used to search for the wordpress package from the newly added bitnami repository?
+helm search repo wordpress
+
+7. How many helm chart repositories are there in the controlplane node now?
+We have added a few helm chart repositories in the controlplane node now.
+helm repo list
+3
+
+8. Deploy the Apache application on the cluster using the apache from the bitnami repository.
+Set the release Name to: amaze-surf
+helm install amaze-surf bitnami/apache
+
+9. What version of apache did we just install on the cluster using the helm chart?
+2.4.63
+
+10. How many releases of nginx charts can you see installed in the cluster now?
+Note: We just installed some charts
+helm list --all-namespaces | grep nginx
+
+11. Uninstall the nginx chart release happy-browse from the cluster.
+helm uninstall happy-browse
+helm list
+
+12. Remove the Hashicorp helm repository from the cluster.
+helm repo remove hashicorp
+helm repo list
