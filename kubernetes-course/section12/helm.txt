@@ -1,0 +1,7 @@
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm install my-release bitnami/worpress
+helm install my-release bitnami/worpress --set wordpressBlogName="Helm Tutorials"
+
+heml list 
+helm uninstall my-release
