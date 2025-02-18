@@ -13,3 +13,10 @@ helm pull bitnami/worpress
 or 
 helm pull bitnami/worpress --untar (download chart)
 helm install my-release ./worpress
+
+helm history my-release
+
+helm rollback my-release 1
+
+helm upgrade my-release bitnami/worpress
+
