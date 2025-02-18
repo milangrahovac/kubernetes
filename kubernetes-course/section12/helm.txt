@@ -19,4 +19,3 @@ helm history my-release
 helm rollback my-release 1
 
 helm upgrade my-release bitnami/worpress
-
