@@ -1,0 +1,34 @@
+1. Add bitnami helm chart repository to the cluster.
+Note: - Make sure to add the bitnami chart to the cluster before moving to the next questions.
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+2. How many releases of nginx can you see in the cluster now?
+helm list --all-namespaces | grep nginx
+answer 1
+
+3. How many revisions of nginx exists in the cluster?
+helm list --all-namespaces | grep nginx
+helm history dazzling-web
+answer 3
+
+4. Which version of nginx is currently running in the cluster?
+helm list --all-namespaces | grep nginx
+APP Version = 1.22.0
+
+5. The DevOps team has decided to upgrade the nginx version to 1.27.x 
+and use the Helm chart version 18.3.6 from the Bitnami repository.
+Ensure that the nginx version running in the cluster is 1.27.x.
+helm repo update
+helm upgrade dazzling-web bitnami/nginx --version 18.3.6 --set image.tag=1.27.0
+helm list
+
+
+6. To which version is the nginx currently upgraded?
+answer 1.27.4
+
+7. Oops!.. There seems to be a minor issue in the website and 
+the DevOps Team is asked to rollback the nginx to previous version!
+Please rollback the nginx to previous version.
+
+helm history dazzling-web 
+helm rollback dazzling-web 3
