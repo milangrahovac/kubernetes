@@ -1,0 +1,26 @@
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+method 1
+helm install my-release bitnami/worpress
+helm install my-release bitnami/worpress --set wordpressBlogName="Helm Tutorials"
+helm install my-release bitnami/worpress --values custom-values.yaml
+
+heml list 
+helm uninstall my-release
+
+methond 2
+helm pull bitnami/worpress
+or 
+helm pull bitnami/worpress --untar (download chart)
+helm install my-release ./worpress
+
+helm history my-release
+
+helm rollback my-release 1
+
+helm upgrade my-release bitnami/worpress
+
+
+helm install dazzling-web bitnami/nginx --version 18.3.6
+
+helm upgrade my-release bitnami/worpress --version 18.3.6
