@@ -1,0 +1,43 @@
+1. How many dirs in the /root/code/k8s
+ls /root/code/k8s
+
+2. Let's create a single kustomization.yaml file in the root of the k8s directory 
+and import all resources defined for db, message-broker, nginx into it.
+Please ensure to apply the config after creating kustomization.yaml file.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - db/db-config.yaml
+  - db/db-depl.yaml
+  - db/db-service.yaml
+  - message-broker/rabbitmq-config.yaml
+  - message-broker/rabbitmq-depl.yaml
+  - message-broker/rabbitmq-service.yaml
+  - nginx/nginx-depl.yaml
+  - nginx/nginx-service.yaml
+
+
+kubectl apply -k k8s/
+
+3. How many pods were deployed?
+kubectl get pods --all-namespaces
+5
+
+4. What is the type of the service that has been deployed for the message-broker?
+ClusterIP
+
+5. Let's create a kustomization.yaml file in each of the subdirectories 
+and import only the resources within that directory.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - db/
+  - message-broker/
+  - nginx/
+
+6. How many pods are created in total?
+6
