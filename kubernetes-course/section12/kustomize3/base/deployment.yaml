@@ -19,3 +19,12 @@ spec:
           image: nginx:latest
           ports:
             - containerPort: 80
+      # containers:
+      #   - name: mypostgresdb
+      #     image: postgres:8
+      #   - name: nginxapp
+      #     image: nginx:1.7.9
+      #   - name: myapp
+      #     image: my-demo-app:latest
+      #   - name: alpine-app
+      #     image: alpine:3.7
