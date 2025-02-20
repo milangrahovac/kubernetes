@@ -4,14 +4,21 @@ kind: Kustomization
 resources:
   - ../../base/
 
-patches:
-  - path: patch.yaml
+# patches:
+#   - path: patch.yaml
 namespace: staging # Set the namespace for this overlay
 
 namePrefix: staging-
 
 labels:
   - includeSelectors: false
-    # - includeTemplates: true
     pairs:
       env: staging
+
+replicas:
+  - name: my-app
+    count: 2
+
+images:
+  - name: nginx
+    newTag: 1.8.2

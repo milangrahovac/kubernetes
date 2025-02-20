@@ -4,13 +4,31 @@ kind: Kustomization
 resources:
   - ../../base/
 
-patches:
-  - path: patch.yaml
+# patches:
+#   - path: patch.yaml
 namespace: dev # Set the namespace for this overlay
 
 namePrefix: dev-
 
 labels:
-  - includeSelectors: true
+  - includeSelectors: false
     pairs:
       env: dev
+
+replicas:
+  - name: my-app
+    count: 2
+
+images:
+  - name: nginx
+    newTag: latest
+# images:
+#   - name: postgres
+#     newName: my-registry/my-postgres
+#     newTag: v1
+#   - name: nginx
+#     newTag: 1.8.0
+#   - name: my-demo-app
+#     newName: my-app
+#   - name: alpine
+#     digest: sha256:24a0c4b4a4c0eb97a1aabb8e29f18e917d05abfe1b7a7c07857230879ce7d3d3

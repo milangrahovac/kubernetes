@@ -4,18 +4,21 @@ kind: Kustomization
 resources:
   - ../../base/
 
-patches:
-  - path: patch.yaml
+# patches:
+#   - path: patch.yaml
 namespace: prod # Set the namespace for this overlay
 
 namePrefix: prod-
 
 labels:
   - includeSelectors: false
-    # - includeTemplates: true
     pairs:
       env: prod
-# commonLabels:
-#   someName: someValue
-#   owner: alice
-#   app: bingo
+
+replicas:
+  - name: my-app
+    count: 5
+
+images:
+  - name: nginx
+    newTag: 1.8.2
