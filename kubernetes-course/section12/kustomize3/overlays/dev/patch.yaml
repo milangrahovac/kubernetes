@@ -8,6 +8,7 @@ spec:
     spec:
       containers:
         - name: my-app
+          image: nginx:1.26.3
           env:
             - name: ENV
               value: "development"
