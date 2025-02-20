@@ -4,6 +4,5 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
-
-commonLables:
-  department: engineering
+# commonLables:
+#   department: engineering
