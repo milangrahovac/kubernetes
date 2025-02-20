@@ -6,8 +6,20 @@ resources:
 
 # patches:
 #   - path: patch.yaml
-namespace: dev # Set the namespace for this overlay
 
+# patches:
+#   - target:
+#       kind: Deployment
+#       name: api-deployment
+#     patch: |-
+#       - op: replace
+#         path: /metadata/name
+#         value: web-deployment
+#       - op: replace
+#         path: /spec/replicas
+#         value: 5
+
+namespace: dev # Set the namespace for this overlay
 namePrefix: dev-
 
 labels:
