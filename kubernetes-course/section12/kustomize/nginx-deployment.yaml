@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    company: MilanTech
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      company: MilanTech
+      component: nginx
+  template:
+    metadata:
+      labels:
+        company: MilanTech
+        component: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
