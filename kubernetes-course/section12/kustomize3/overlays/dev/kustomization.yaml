@@ -6,3 +6,6 @@ resources:
 
 patchesStrategicMerge:
   - patch.yaml
+
+commonLables:
+  env: dev
