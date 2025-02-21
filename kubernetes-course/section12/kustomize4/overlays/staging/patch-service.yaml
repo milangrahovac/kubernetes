@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app
+  labels:
+    app: dev-my-app
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: null # delete the key

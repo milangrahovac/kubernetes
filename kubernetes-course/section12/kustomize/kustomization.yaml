@@ -8,3 +8,6 @@ resources:
 # kustomize build k8s | kubectl delete -f -
 # or
 # kubectl delete -k k8s/
+# kustomize build dev/
+# kubectl apply -k /root/code/k8s/overlays/QA
+# kubectl apply -k QA/
