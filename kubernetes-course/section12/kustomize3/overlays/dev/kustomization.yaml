@@ -5,7 +5,8 @@ resources:
   - ../../base/
 
 patches:
-  - path: patch.yaml
+  - path: patch-deployment.yaml
+  - path: patch-service.yaml
 # patches:
 #   - target:
 #       kind: Deployment
@@ -17,6 +18,8 @@ patches:
 #       - op: replace
 #         path: /spec/replicas
 #         value: 5
+#       - op: remove
+#         path: /spec/template/metadata/labels/org
 
 # namespace: dev # Set the namespace for this overlay
 # namePrefix: dev-
