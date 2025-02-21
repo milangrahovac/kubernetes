@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: redis
+          env:
+            - name: REDIS_DB_ROOT_USERNAME
+              value: mypostgres
+            - name: POSTGRES_DB_ROOT_PASSWORD
+              value: password

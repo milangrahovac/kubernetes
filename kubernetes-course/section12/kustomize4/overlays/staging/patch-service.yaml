@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: my-app
   labels:
-    app: my-app
+    app: dev-my-app
 spec:
-  type: ClusterIP
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8080
   selector:
-    app: my-app
+    app: null # delete the key
