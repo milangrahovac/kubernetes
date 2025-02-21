@@ -20,7 +20,16 @@ patches:
 #         value: 5
 #       - op: remove
 #         path: /spec/template/metadata/labels/org
-
+#       - op: replace
+#         path: /spec/template/spec/containers/0
+#           value: haproxy
+#           image: haproxy
+#       - op: add
+#         path: /spec/template/spec/containers/-
+#           value: haproxy
+#           image: haproxy
+#       - op: remove
+#         path: /spec/template/spec/containers/1
 # namespace: dev # Set the namespace for this overlay
 # namePrefix: dev-
 
