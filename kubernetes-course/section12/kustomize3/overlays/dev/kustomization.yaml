@@ -4,13 +4,12 @@ kind: Kustomization
 resources:
   - ../../base/
 
-# patches:
-#   - path: patch.yaml
-
+patches:
+  - path: patch.yaml
 # patches:
 #   - target:
 #       kind: Deployment
-#       name: api-deployment
+#       name: dev-my-app
 #     patch: |-
 #       - op: replace
 #         path: /metadata/name
@@ -19,21 +18,21 @@ resources:
 #         path: /spec/replicas
 #         value: 5
 
-namespace: dev # Set the namespace for this overlay
-namePrefix: dev-
+# namespace: dev # Set the namespace for this overlay
+# namePrefix: dev-
 
-labels:
-  - includeSelectors: false
-    pairs:
-      env: dev
+# labels:
+#   - includeSelectors: false
+#     pairs:
+#       env: dev
 
-replicas:
-  - name: my-app
-    count: 2
+# replicas:
+#   - name: my-app
+#     count: 2
 
-images:
-  - name: nginx
-    newTag: latest
+# images:
+#   - name: nginx
+#     newTag: latest
 # images:
 #   - name: postgres
 #     newName: my-registry/my-postgres
