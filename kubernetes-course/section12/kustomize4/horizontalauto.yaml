@@ -1,0 +1,41 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: "2025-02-22T16:21:23Z"
+  name: nginx-deployment
+  namespace: default
+  resourceVersion: "2395"
+  uid: 9a6e819f-3c7c-4988-a9e1-effb8b017606
+spec:
+  maxReplicas: 3
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 80
+          type: Utilization
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx-deployment
+status:
+  conditions:
+    - lastTransitionTime: "2025-02-22T16:21:38Z"
+      message: the HPA controller was able to get the target's current scale
+      reason: SucceededGetScale
+      status: "True"
+      type: AbleToScale
+    - lastTransitionTime: "2025-02-22T16:21:53Z"
+      message:
+        "the HPA was unable to compute the replica count: failed to get cpu utilization:
+        missing request for cpu in container nginx of Pod nginx-deployment-d556bf558-zd4p4"
+      reason: FailedGetResourceMetric
+      status: "False"
+      type: ScalingActive
+  currentMetrics:
+    - type: ""
+  currentReplicas: 3
+  desiredReplicas: 3
+  lastScaleTime: "2025-02-22T16:21:38Z"
