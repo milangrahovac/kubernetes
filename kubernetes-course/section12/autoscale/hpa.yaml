@@ -1,8 +1,7 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  creationTimestamp: null
-  name: nginx-deployment
+  name: nginx-deployment-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
