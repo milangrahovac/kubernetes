@@ -13,3 +13,4 @@ spec:
 status:
   currentReplicas: 0
   desiredReplicas: 0
+# kubectl scale deployment my-app --replicas=3
