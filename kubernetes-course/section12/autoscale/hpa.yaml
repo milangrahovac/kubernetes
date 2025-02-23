@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: null
+  name: nginx-deployment
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx-deployment
+  minReplicas: 3
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+#   targetCPUUtilizationPercentage: 80
+# status:
+#   currentReplicas: 0
+#   desiredReplicas: 0
+# kubectl scale deployment my-app --replicas=3
