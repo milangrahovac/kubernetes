@@ -1,0 +1,58 @@
+1. The cluster is broken. We tried deploying an application but it's not working. Troubleshoot and fix the issue.
+Start looking at the deployments.
+
+kubectl get all --all-namespaces
+check the status of kube-scheduler pod
+kubectl get pods -n kube-system
+kubectl describe pod kube-scheduler-controlplane -n kube-system
+The command run by the scheduler pod is incorrect.
+nano /etc/kubernetes/manifests/kube-scheduler.yaml 
+kubectl get pods -n kube-system
+kubectl edit pod kube-scheduler-controlplane -n kube-system
+
+2. Scale the deployment app to 2 pods.
+
+kubectl get deploy 
+kubectl describe deploy app
+change replicas to 2
+kubectl get deploy 
+
+3. Even though the deployment was scaled to 2, the number of PODs does not seem to increase. 
+Investigate and fix the issue.
+Inspect the component responsible for managing deployments and replicasets.
+
+kubectl get all --all-namespaces
+kube-controller-manager-controlplane  - statys crashLoopBackOff
+kubectl describe pod kube-controller-manager-controlplane -n kube-system
+kubectl logs kube-controller-manager-controlplane -n kube-system
+
+nano /etc/kubernetes/manifests/kube-controller-manager.yaml 
+fix name
+ - --kubeconfig=/etc/kubernetes/controller-manager-XXXX.conf
+check kube-controller-manager-controlplane
+kubectl get pods -n kube-system 
+kubectl get pods
+
+4. Something is wrong with scaling again. We just tried scaling the deployment to 3 replicas. 
+But it's not happening.
+Investigate and fix the issue.
+
+kubectl get deployments
+kubectl get pods -n kube-system
+kube-controller-manager-controlplane - status CrashLoopBackOff
+
+kubectl get pods -n kube-system
+
+kubectl logs kube-controller-manager-controlplane -n kube-system
+err="unable to load client CA provider: open /etc/kubernetes/pki/ca.crt: no such file or directory"
+kubectl describe pod kube-controller-manager-controlplane -n kube-system 
+cat /etc/kubernetes/manifests/kube-controller-manager.yaml 
+nano /etc/kubernetes/manifests/kube-controller-manager.yaml 
+- hostPath:
+      path: /etc/kubernetes/WRONG-PKI-DIRECTORY
+      type: DirectoryOrCreate
+
+kubectl get pods -n kube-system 
+kubectl get pods
+kubectl get nodes
+kubectl describe node worker1
