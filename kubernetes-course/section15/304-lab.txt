@@ -99,5 +99,7 @@ Feel free to edit, delete or recreate objects as necessary.
 kubectl get svc web-service -n zeta -o yaml > web-service.yaml
 change port 
 
+kubectl config set-context --current --namespace=zeta
 kubectl get pod  webapp-mysql-b9c9f7fbd-56kp5 -n zeta -o yaml > webapp.yaml
 change username
+kubectl replace --force webapp.yaml

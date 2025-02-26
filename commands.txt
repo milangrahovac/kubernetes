@@ -109,6 +109,7 @@ kubectl get pods --namespace=kube-system
 kubectl create -f pode-definition.yml --namespace=dev
 
 kubectl create namespace dev
+kubectl config set-context --current --namespace=dev
 kubectl config set-context $(kubectl config current-context) --namespace=dev
 kubectl get pods --all-namespaces
 
@@ -324,3 +325,13 @@ kubectl exec webapp -- cat /log/app.log
 
 kubectl get pv
 kubectl get pvc
+
+kubectl logs kube-apiserver-master -n kube-system
+sudo journalctl -u kube-apiserver
+
+df -h
+service kubelet status
+openssl x509 -in /var/lib/kubelet/worker-1.crt -text
+
+check the service logs
+journalctl -u kubelet.
