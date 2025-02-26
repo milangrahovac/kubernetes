@@ -330,3 +330,10 @@ kubectl get pvc
 
 kubectl logs kube-apiserver-master -n kube-system
 sudo journalctl -u kube-apiserver
+
+df -h
+service kubelet status
+openssl x509 -in /var/lib/kubelet/worker-1.crt -text
+
+check the service logs
+journalctl -u kubelet.

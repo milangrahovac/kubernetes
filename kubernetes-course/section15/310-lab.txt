@@ -1,0 +1,23 @@
+1. Fix the broken cluster
+kubectl describe node node01
+ssh node01
+service kubelet status - check status, status is inactive
+service kubelet start
+
+2. The cluster is broken again. Investigate and fix the issue.
+kubectl describe node node01
+ssh node01
+journalctl -u kubelet -n 100 --no-pager
+/etc/kubernetes/pki/WRONG-CA-FILE.crt:
+
+nano /var/lib/kubelet/config.yaml
+change certificate path to: /etc/kubernetes/pki/ca.crt:
+
+
+
+systemctl restart kubelet
+free -h  # Check memory usage
+df -h    # Check disk usage
+top      # Check CPU usage
+
+/var/lib/kubelet/config.yaml
