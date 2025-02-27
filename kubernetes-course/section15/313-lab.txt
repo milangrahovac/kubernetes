@@ -13,3 +13,18 @@ your application. It is currently failed. Troubleshoot and fix the issue.
 Stick to the given architecture. Use the same names and port numbers as given in the below architecture 
 diagram. Feel free to edit, delete or recreate objects as necessary.
 
+kubectl get pods -n kube-system 
+kubectl -n kube-system logs kube-proxy-z9m2k 
+root@controlplane ~ ✦2 ✖ kubectl logs kube-proxy-z9m2k -n kube-system 
+E0226 21:56:02.090723       1 run.go:74] "command failed" err="failed complete: open /var/lib/kube-proxy/configuration.conf: no such file or directory"
+
+kubectl -n kube-system describe configmap kube-proxy
+
+kubectl -n kube-system edit daemonset kube-proxy
+
+changespec:
+    containers:
+    - command:
+        - /usr/local/bin/kube-proxy
+        - --config=/var/lib/kube-proxy/config.conf
+        - --hostname-override=$(NODE_NAME)
