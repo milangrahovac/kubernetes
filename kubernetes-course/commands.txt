@@ -126,7 +126,7 @@ kubectl run httpd --image=httpd:alpine --port=8080
 kubectl expose pod httpd --port=80 --name httpd --dry-run=client -o yaml
 
 Taint:
-kubect taint nodes node-name key=value:taint-effect
+kubectl taint nodes node-name key=value:taint-effect
 kubectl taint nodes node1 app=blue:NoSchedule
 
 Telerations:
@@ -281,6 +281,7 @@ kubectl drain node01 --ignore-daemonsets
 kubectl cordon node-1 (make node unschedulable, active pods stays runing on the pod)
 kubectl uncordon node-1 (make node schedulable)
 
+apt list -a kubeadm
 
 google cloud update cluster
 kubeadm upgrade plan
@@ -288,6 +289,8 @@ kubeadm upgrade apply
 apt-get upgrade -y kubeadm=1.12.0-00
 kubeadm upgrade apply v1.12.0
 system restart kubelet services
+
+
 
 1. kubectl drain node-1
 2. apt-get upgrade -y kubeadm=1.12.0-00

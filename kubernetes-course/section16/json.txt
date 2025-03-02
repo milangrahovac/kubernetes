@@ -1,0 +1,29 @@
+kubectl get pods -o json
+kubectl get pods -o=jsonpath='{ .items[0].spec.containers[0].image }'
+kubectl get pods -o=jsonpath='{ .items[*].metadata.name }'
+kubectl get nodes -o=jsonpath='{ .items[*].metadata.name }'
+kubectl get pods -o=jsonpath='{ .items[*].status.capacity.cpu }'
+kubectl get pods -o=jsonpath='{ .items[*].metadata.name } {"\n"} { .items[*].status.capacity.cpu }'
+
+{"\n"} - new line
+{"\t"} - tab
+
+kubectl get pods -o=jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.status.capacity.cpu}'
+kubectl get pods -n dev -o=jsonpath='{range .items[*]} {.metadata.name} {"\n"}'
+
+kubectl get nodes -o=custom-columns=<COLUMN NAME>:<JSON PATH>
+kubectl get nodes -o=custom-columns=NODE:.metadata.name, CPU:.status.capacity.cpu
+
+kubectl get nodes --sort-by=.metadata.name
+
+
+kubectl get nodes -o=jsonpath='{ .items[*].spec.containers[0].image }' 
+
+
+kubectl get pv -o=custom-columns=NODE:.metadata.name, CPU:.status.capacity.cpu
+kubectl get pv --sort-by=.spec.capacity.storage > /opt/outputs/storage-capacity-sorted.txt
+
+kubectl get pv -o=jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.spec.capacity.storage} {"\n"}'
+
+
+kubectl get pv -o=custom-columns=NAME:.metadata.name, CAPACITY:.spec.capacity.storage
