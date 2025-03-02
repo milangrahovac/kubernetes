@@ -1,0 +1,121 @@
+Get list of nodes:
+kubectl get nodes
+
+check if some nodes have Taint 
+kubectl describe node | grep Taints
+
+get latest stable version availabe for upgrade:
+kubeadmm upgrade plan
+
+then run:
+kubeadmm upgrade apply v1.19.16
+
+Switching to another Kubernetes package repository
+Open the file that defines the Kubernetes apt repository using a text editor of your choice:
+
+nano /etc/apt/sources.list.d/kubernetes.list
+You should see a single line with the URL that contains your current Kubernetes minor version. For example, if you're using v1.31, you should see this:
+
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /
+Change the version in the URL to the next available minor release, for example:
+
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /
+Save the file and exit your text editor. Continue following the relevant upgrade instructions.
+
+
+___________________________________
+Upgrade the masternode:
+- make the master node UnScheduable:
+kubectl drain controlplane --ignore-deamonsets
+
+Upgrade controlplane to v1.20.0
+Determine which version to upgrade to:
+
+sudo apt update
+sudo apt-cache madison kubeadm
+
+Upgrade kubeadm:
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.32.x-*' && \
+sudo apt-mark hold kubeadm
+
+Verify that the download works and has the expected version:
+kubeadm version
+
+Verify the upgrade plan:
+sudo kubeadm upgrade plan
+
+Choose a version to upgrade to
+sudo kubeadm upgrade apply v1.32.x
+
+Upgrade kubelet and kubectl 
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.32.x-*' kubectl='1.32.x-*' && \
+sudo apt-mark hold kubelet kubectl
+
+Restart the kubelet:
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+Check status:
+kubectl get nodes
+
+Uncordon the node
+kubectl uncordon controlplane
+
+_____________
+Drain worker node01 
+kubectl drain node01
+
+ssh node01
+
+Upgrade kubeadm:
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.32.x-*' && \
+sudo apt-mark hold kubeadm
+
+Call "kubeadm upgrade
+sudo kubeadm upgrade node
+
+Upgrade kubelet and kubectl 
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.32.x-*' kubectl='1.32.x-*' && \
+sudo apt-mark hold kubelet kubectl
+
+Restart the kubelet:
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+Uncordon the node
+kubectl uncordon node01
+
+_____________
+kubectl-controller-manager --pod-eviction-timeout=5m0s
+kubectl drain node-1 (move podes from node-1 to another pods, scheduler do not create pods on that node)
+kubectl drain node01 --ignore-daemonsets
+
+kubectl cordon node-1 (make node unschedulable, active pods stays runing on the pod)
+kubectl uncordon node-1 (make node schedulable)
+
+apt list -a kubeadm
+
+google cloud update cluster
+kubeadm upgrade plan
+kubeadm upgrade apply v1.31.6
+apt-get upgrade -y kubeadm=1.12.0-00
+kubeadm upgrade apply v1.12.0
+system restart kubelet services
+
+
+
+1. kubectl drain node-1
+2. apt-get upgrade -y kubeadm=1.12.0-00
+3. apt-get upgrade -y kubelet=1.12.0-00
+4. kubeadm upgrade node config --kubelet-version v1.12.0
+5. system restart kubelet services
+6. kubectl uncordon node-1
+
+
+
+kubeadm upgrade node config --kubelet-version v1.31.0 \
+system restart kubelet services
