@@ -1,0 +1,270 @@
+1. Deploy a pod named nginx-pod using the nginx:alpine image.
+Once done, click on the Next Question button in the top right corner of this panel. 
+You may navigate back and forth freely between all questions. 
+Once done with all questions, click on End Exam. Your work will be validated at the end and score shown. 
+Good Luck!
+
+kubectl run nginx-pod --image=nginx:alpine
+
+2. Deploy a messaging pod using the redis:alpine image with the labels set to tier=msg.
+
+kubectl run messaging --image=redis:alpine --labels="tier=msg"
+
+3. Create a namespace named apx-x9984574.
+
+kubectl create namespace apx-x9984574
+
+4. Get the list of  nodes in JSON format and store it in a file at /opt/outputs/nodes-z3444kd9.json.
+
+kubectl get nodes -o json > /opt/outputs/nodes-z3444kd9.json
+
+5. Create a service messaging-service to expose the messaging application within the cluster on port 6379.
+
+kubectl expose pod messaging --port=6379 --name messaging-service --type=ClusterIP
+
+6. Create a deployment named hr-web-app using the image kodekloud/webapp-color with 2 replicas.
+
+kubectl create deployment hr-web-app --image=kodekloud/webapp-color --replicas=2
+
+7. Create a static pod named static-busybox on the controlplane node that uses the busybox image 
+and the command sleep 1000.
+
+kubectl run static-busybox --image=busybox --dry-run -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+or
+nano /etc/kubernetes/manifests/static-busybox.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-busybox
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sleep", "1000"]
+  nodeName: controlplane 
+
+8. Create a POD in the finance namespace named temp-bus with the image redis:alpine.
+
+kubectl create namespace finance
+kubectl run temp-bus --image=redis:alpine -n finance
+
+9. A new application orange is deployed. There is something wrong with it. Identify and fix the issue.
+
+kubectl edit pod orange 
+  initContainers:
+  - command:
+    - sh
+    - -c
+    - "sleep 2"
+    image: busybox
+
+kubectl delete pod orange
+kubectl apply -f /tmp/kubectl-edit-4277216733.yaml
+
+or 
+
+kubectl replace --force /tmp/kubectl-edit-4277216733.yaml
+
+10. Expose the hr-web-app created in the previous task as a service named hr-web-app-service, 
+accessible on port 30082 on the nodes of the cluster.
+The web application listens on port 8080.
+
+kubetl expose deploy hr-web-app --name=hr-web-app-service --type=NodePort --port=8080
+you can't add a node port
+kubectl edic svc hr-web-app-service
+add nodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30082
+
+nano hr-web-app-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hr-web-app-service
+spec:
+  selector:
+    app: hr-web-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30082
+  type: NodePort
+
+kubectl apply -f hr-web-app-service.yaml 
+
+11. Use JSON PATH query to retrieve the osImages of all the nodes 
+and store it in a file /opt/outputs/nodes_os_x43kj56.txt.
+The osImage are under the nodeInfo section under status of each node.
+
+kubectl get nodes -o=jsonpath='{ .items[*].status.nodeInfo.osImage }' > /opt/outputs/nodes_os_x43kj56.txt
+
+12. Create a Persistent Volume with the given specification: -
+
+Volume name: pv-analytics
+
+Storage: 100Mi
+
+Access mode: ReadWriteMany
+
+Host path: /pv/data-analytics
+
+
+nano pv-analytics-pv.yaml
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-analytics
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /pv/data-analytics
+
+
+13.  Configure Horizontal Pod Autoscaler (HPA) with Custom Scale-Down Behavior
+Instructions:
+Create a Horizontal Pod Autoscaler (HPA) with name webapp-hpa for the deployment named kkapp-deploy in the default namespace with the webapp-hpa.yaml file located under the root folder.
+Ensure that the HPA scales the deployment based on CPU utilization, maintaining an average CPU usage of 50% across all pods.
+Configure the HPA to cautiously scale down pods by setting a stabilization window of 300 seconds to prevent rapid fluctuations in pod count.
+Note: The kkapp-deploy deployment is created for backend; you can check in the terminal.
+
+
+nano /root/webapp-hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: webapp-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kkapp-deploy
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+kubectl create -f /root/webapp-hpa.yaml
+
+14.  Deploy a Vertical Pod Autoscaler (VPA).
+Deploy a Vertical Pod Autoscaler (VPA) with name analytics-vpa for the deployment named analytics-deployment in the default namespace.
+The VPA should automatically adjust the CPU and memory requests of the pods to optimize resource utilization. Ensure that the VPA operates in Auto mode, allowing it to evict and recreate pods with updated resource requests as needed.
+
+kubectl create -n default -f - <<EOF
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: analytics-vpa
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: analytics-deployment
+  updatePolicy:
+    updateMode: "Auto"
+EOF
+
+15. Create a Kubernetes Gateway resource with the following specifications:
+
+Name: web-gateway
+Namespace: nginx-gateway
+Gateway Class Name: nginx
+Listeners:
+Protocol: HTTP
+Port: 80
+Name: http
+
+nano web-gateway.yaml
+apiVersion: networking.k8s.io/v1alpha2
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: nginx-gateway
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+
+
+16. One co-worker deployed an nginx helm chart kk-mock1 in kk-ns namespace on the cluster. A new update is pushed to the helm chart, and the team wants you to update the helm repository to fetch the new changes.
+
+
+After updating the helm chart, upgrade the helm chart version to 18.1.15.
+
+Solution
+In this task, we will use the kubectl and helm commands. Here are the steps: -
+
+
+
+use the helm ls command to list all the releases installed using Helm in the Kubernetes cluster.
+
+helm ls -A
+
+
+
+Here -A or --all-namespaces option lists all the releases of all the namespaces.
+
+
+
+Identify the namespace where the resources get deployed.
+
+
+Use the helm repo ls command to list the helm repositories.
+helm repo ls 
+
+
+
+Now, update the helm repository with the following command: -
+
+helm repo update kk-mock1 -n kk-ns
+
+
+
+The above command updates the local cache of available charts from the configured chart repositories.
+
+
+
+The helm search command searches for all the available charts in a specific Helm chart repository. In our case, it's the nginx helm chart.
+helm search repo kk-mock1/nginx -n kk-ns -l | head -n30
+
+
+
+The -l or --versions option is used to display information about all available chart versions.
+
+
+
+Upgrade the helm chart to 18.1.15 and also, increase the replica count of the deployment to 2 from the command line. Use the helm upgrade command as follows: -
+
+helm upgrade kk-mock1 kk-mock1/nginx -n kk-ns --version=18.1.15 
+
+
+
+After upgrading the chart version, you can verify it with the following command: -
+
+helm ls -n kk-ns
+
+
+
+Look under the CHART column for the chart version.

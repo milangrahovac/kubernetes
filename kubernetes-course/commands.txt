@@ -150,7 +150,7 @@ kubectl describe daemonset kube-proxy -n kube-system
 
 1. kubectl run nginx-pod --image=nginx:alpine  
 
-2. kubectl run redis --image=redis:alpine --label="tier=db, env=prod"
+2. kubectl run redis --image=redis:alpine --labels="tier=db, env=prod"
 
 3. kubectl expose pod redis --port=6379 --name redis-service  
 
@@ -285,7 +285,7 @@ apt list -a kubeadm
 
 google cloud update cluster
 kubeadm upgrade plan
-kubeadm upgrade apply
+kubeadm upgrade apply v1.31.6
 apt-get upgrade -y kubeadm=1.12.0-00
 kubeadm upgrade apply v1.12.0
 system restart kubelet services
@@ -300,4 +300,7 @@ system restart kubelet services
 6. kubectl uncordon node-1
 
 
+
+kubeadm upgrade node config --kubelet-version v1.31.0 \
+system restart kubelet services
 
