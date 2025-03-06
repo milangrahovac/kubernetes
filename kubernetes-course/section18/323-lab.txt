@@ -28,19 +28,24 @@ name: alpha
 Container 2:
 name: beta
 
+---
 apiVersion: v1
 kind: Pod
 metadata:
   name: multi-pod
-  labels:
-    app: multi-pod
 spec:
   containers:
-    - name: alpha
-      image: nginx
-    - name: beta
-      image: busybox
-      command: ["sleep", "4800"]
+  - name: alpha
+    image: nginx
+    env:
+    - name: name
+      value: alpha
+  - name: beta
+    image: busybox
+    command: ["sleep", "4800"]
+    env:
+    - name: name
+      value: beta
 
 4. Create a Pod called non-root-pod , image: redis:alpine
 
@@ -70,7 +75,21 @@ NetworkPolicy: Applied to All sources (Incoming traffic from all pods)?
 NetWorkPolicy: Correct Port?
 NetWorkPolicy: Applied to correct Pod?
 
-
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-nptest
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: np-test-1
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 80
 
 
 6. Taint the worker node node01 to be Unschedulable. Once done, create a pod called dev-redis, 
@@ -78,12 +97,48 @@ image redis:alpine, to ensure workloads are not scheduled to this worker node. F
 a new pod called prod-redis and image: redis:alpine with toleration to be scheduled on node01.
 key: env_type, value: production, operator: Equal and effect: NoSchedule
 
+To add taints on the node01 worker node:
+
+kubectl taint node node01 env_type=production:NoSchedule
+
+Now, deploy dev-redis pod and to ensure that workloads are not scheduled to this node01 worker node.
+
+kubectl run dev-redis --image=redis:alpine
+
+To view the node name of recently deployed pod:
+
+kubectl get pods -o wide
+
+Solution manifest file to deploy new pod called prod-redis with toleration to be scheduled on node01 worker node.
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prod-redis
+spec:
+  containers:
+  - name: prod-redis
+    image: redis:alpine
+  tolerations:
+  - effect: NoSchedule
+    key: env_type
+    operator: Equal
+    value: production     
+
+To view only prod-redis pod with less details:
+
+kubectl get pods -o wide | grep prod-redis
+
 7. Create a pod called hr-pod in hr namespace belonging to the production environment and frontend tier.
 image: redis:alpine
 
 Use appropriate labels and create all the required objects if it does not exist in the system already.
 hr-pod labeled with environment production?
 hr-pod labeled with tier frontend?
+
+
+kubectl run hr-pod --image=redis:alpine --namespace=hr --labels=environment=production,tier=frontend
 
 8. A kubeconfig file called super.kubeconfig has been created under /root/CKA. 
 There is something wrong with the configuration. Troubleshoot and fix it.
@@ -100,7 +155,6 @@ The HPA should scale the deployment based on a custom metric named requests_per_
 targeting an average value of 1000 requests per second across all pods.
 Set the minimum number of replicas to 1 and the maximum to 20.
 Note: Deployment named api-deployment is available in api namespace.
-
 
 Is api-hpa HPA deployed in api namespace?
 Is api-hpa configured for metric requests_per_second?
