@@ -304,3 +304,18 @@ system restart kubelet services
 kubeadm upgrade node config --kubelet-version v1.31.0 \
 system restart kubelet services
 
+Take a backup of the etcd cluster and save it to: /opt/etcd-backup.db
+
+ETCD_API=3 etcdctl --endpoints snapshot --help
+cat /etc/kubernetes/manifests/etcd.yaml
+get cert files paths
+"listen client urls"
+
+ETCD_API=3 etcdctl --endpoints 127.0.0.1:2379 snapshot save /opt/etcd-backup.db \ 
+--cacert=/etc/kubernetes/pki/etcd/ca.crt \ 
+--cert=/etc/kuberntes/pki/etcd/server.crt \ 
+--key=/etc/kuberntes/pki/etcd/server.key
+
+
+
+
