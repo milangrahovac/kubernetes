@@ -4,11 +4,17 @@ called pvviewer-role and ClusterRoleBinding called pvviewer-role-binding.
 Next, create a pod called pvviewer with the image: redis and serviceAccount: 
 pvviewer in the default namespace.
 
-kubectl run messaging --image=redis:alpine --labels="tier=msg"
+kubectl create serviceaccount pvviewer
+kubectl create clusterrole pvviewer-role --verb=list -resource=persistentvolumes
+kubectl get clusterrole pvviewer-role
 
+kubectl create clusterrolebinding pvviewer-role-binding --clusterrole=pvviewer-role --serviceaccount=default:pvviewer
+
+kubectl run messaging --image=redis:alpine -o yaml > redis.yaml 
+add in spec:
+    serviceAccountName: pvviewer
 
 kubectl get serviceaccount pvviewer -n default
-kubectl get clusterrole pvviewer-role
 kubectl get pods pvviewer -n default
 kubectl auth can-i list persistentvolumes --as=system:serviceaccount:default:pvviewer
 
@@ -16,6 +22,8 @@ kubectl auth can-i list persistentvolumes --as=system:serviceaccount:default:pvv
 Answer should be in the format: InternalIP of controlplane<space>InternalIP of node01 (in a single line)
 
 kubectl get nodes -o=jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' > /root/CKA/node_ips
+
+| jq 
 
 3. Create a pod called multi-pod with two containers.
 Container 1: name: alpha, image: nginx
